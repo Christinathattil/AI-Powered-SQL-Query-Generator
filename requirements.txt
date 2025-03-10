@@ -35,7 +35,7 @@ Foundation==0.1.0a0.dev1
 fqdn==1.5.1
 fsspec==2025.3.0
 gitdb_speedups==0.1.0
-grpc_reflection==1.0.0
+grpcio-reflection==1.0.0
 grpc_tools==1.0.0
 gspread==6.2.0
 gunicorn==23.0.0
