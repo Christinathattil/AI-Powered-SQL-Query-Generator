@@ -117,7 +117,7 @@ def main():
     """)
 
     st.markdown('<h2 class="section-title">Help</h2>', unsafe_allow_html=True)
-    st.write("Reach out: christinajosthattil@gmail.com. We’re here!")
+    st.write("Reach out: christina@gmail.com. We’re here!")
 
     st.markdown('<div class="footer"><p>Built with ❤️ by Christina © 2025</p></div>', unsafe_allow_html=True)
 
