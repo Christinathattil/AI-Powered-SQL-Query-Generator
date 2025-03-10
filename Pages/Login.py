@@ -86,7 +86,7 @@ def main():
         password = st.text_input("Password", type="password")
         if st.button("Log In"):
             # Admin login check (hardcoded for admin)
-            if email.lower() == "christinajosthattil@gmail.com" and password == "admin":
+            if email.lower() == "christina@gmail.com" and password == "admin":
                 st.session_state.authenticated = True
                 st.session_state.admin = True
                 st.session_state.current_page = "Main"  # Switch to Main page
