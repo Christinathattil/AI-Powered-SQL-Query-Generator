@@ -9,6 +9,7 @@ import os
 import smtplib
 from email.message import EmailMessage
 import re
+from google_drive_utils import upload_file
 
 
 current_dir = Path(__file__).resolve()
@@ -193,7 +194,6 @@ def main():
                     send_email(admin_email, subject, body)
 
                     # Upload the updated users.db back to Google Drive
-                    from google_drive_utils import upload_file
                     USERS_DB_FILE_ID = st.secrets.get("USERS_DB_FILE_ID")
                     upload_file(USERS_DB_FILE_ID, local_users_db)
                     
