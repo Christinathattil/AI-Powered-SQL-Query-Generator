@@ -1,4 +1,4 @@
-#SqlProj/Pages/Login.py
+#AI-Powered-SQL-Query-Generator/Pages/Login.py
 
 import sys
 import streamlit as st
@@ -14,8 +14,8 @@ root_directory = current_dir.parent.parent.parent
 if str(root_directory) not in sys.path:
     sys.path.insert(0, str(root_directory))
 
-from SqlProj.config import CUSTOM_CSS
-from SqlProj.Pages import SessionState
+from AI-Powered-SQL-Query-Generator.config import CUSTOM_CSS
+from AI-Powered-SQL-Query-Generator.Pages import SessionState
 
 # Initialize Users Database
 def init_users_db():
