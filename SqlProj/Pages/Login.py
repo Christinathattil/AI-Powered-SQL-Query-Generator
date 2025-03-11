@@ -21,7 +21,12 @@ from SqlProj.Pages import SessionState
 
 # Initialize Users Database
 def init_users_db():
-    conn = sqlite3.connect("users.db")
+    # conn = sqlite3.connect("users.db")
+    
+    # Define the local path (ensure this matches what you used in QueryGen.py)
+    local_users_db = os.path.join("data", "users.db")
+    conn = sqlite3.connect(local_users_db)
+    
     c = conn.cursor()
     c.execute("""
     CREATE TABLE IF NOT EXISTS users (
@@ -115,7 +120,10 @@ def main():
                 st.rerun()
             else:
                 # Check user in database
-                conn = sqlite3.connect("users.db")
+                # conn = sqlite3.connect("users.db")
+
+                local_users_db = os.path.join("data", "users.db")
+                conn = sqlite3.connect(local_users_db)
                 c = conn.cursor()
                 c.execute("SELECT full_name, password_hash, status, role FROM users WHERE email = ?", (email.lower(),))
                 user = c.fetchone()
@@ -164,7 +172,12 @@ def main():
 
 
             else:
-                conn = sqlite3.connect("users.db")
+                # conn = sqlite3.connect("users.db")
+
+                # Define the local path (ensure this matches what you used in QueryGen.py)
+                local_users_db = os.path.join("data", "users.db")
+                conn = sqlite3.connect(local_users_db)
+                
                 c = conn.cursor()
                 try:
                     c.execute("INSERT INTO users (full_name, email, password_hash, purpose, role, status) VALUES (?, ?, ?, ?, ?, ?)",
@@ -178,6 +191,12 @@ def main():
                     body = (f"New registration details:\n\nFull Name: {full_name}\nEmail: {reg_email}\n"
                             f"Purpose: {purpose}\nRole: {role}\n\nPlease review and approve the registration.")
                     send_email(admin_email, subject, body)
+
+                    # Upload the updated users.db back to Google Drive
+                    from google_drive_utils import upload_file
+                    USERS_DB_FILE_ID = st.secrets.get("USERS_DB_FILE_ID")
+                    upload_file(USERS_DB_FILE_ID, local_users_db)
+                    
                 except sqlite3.IntegrityError:
                     st.error("A user with this email already exists.")
                 except Exception as e:
