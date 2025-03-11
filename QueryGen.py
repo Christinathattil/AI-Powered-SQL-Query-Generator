@@ -1,4 +1,4 @@
-# SqlProj/QueryGen.py
+# AI-Powered-SQL-Query-Generator/QueryGen.py
 import streamlit as st
 from Pages import SessionState, Home, Login, Main, Documentation, AdminApproval
 import os
