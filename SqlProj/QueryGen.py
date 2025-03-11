@@ -3,6 +3,21 @@ import streamlit as st
 from Pages import SessionState, Home, Login, Main, Documentation, AdminApproval
 import os
 
+# Create a local directory to hold the databases
+os.makedirs("data", exist_ok=True)
+# Get file IDs from Streamlit secrets (set these in your secrets)
+USERS_DB_FILE_ID = st.secrets.get("USERS_DB_FILE_ID")
+QUERY_HISTORY_DB_FILE_ID = st.secrets.get("QUERY_HISTORY_DB_FILE_ID")
+
+# Define local paths
+local_users_db = os.path.join("data", "users.db")
+local_query_history_db = os.path.join("data", "query_history.db")
+
+# Download the files using our helper module
+from google_drive_utils import download_file
+download_file(USERS_DB_FILE_ID, local_users_db)
+download_file(QUERY_HISTORY_DB_FILE_ID, local_query_history_db)
+
 # Force single-page mode by preventing Streamlit from auto-detecting other pages
 os.environ["STREAMLIT_SINGLE_PAGE_MODE"] = "true"
 
@@ -15,6 +30,8 @@ st.set_page_config(
 
 # Initialize session state
 SessionState.initialize_session_state()
+
+
 
 # Complete page mapping
 page_map = {
