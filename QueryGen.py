@@ -4,16 +4,6 @@ from Pages import SessionState, Home, Login, Main, Documentation, AdminApproval
 import os
 import sys
 
-
-# Get the directory path where the script is running
-root_directory = os.path.dirname(os.path.abspath(__file__))
-
-# Add the project root to system path
-if root_directory not in sys.path:
-    sys.path.append(root_directory)
-
-from SqlProj.config import CUSTOM_CSS  # Now it should be found
-
 # Force single-page mode by preventing Streamlit from auto-detecting other pages
 os.environ["STREAMLIT_SINGLE_PAGE_MODE"] = "true"
 
