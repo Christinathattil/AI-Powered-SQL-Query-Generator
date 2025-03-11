@@ -63,7 +63,7 @@ def main():
 
     st.markdown('<h2 class="section-title">Getting Started</h2>', unsafe_allow_html=True)
     st.write("""
-    - **Login**: Use credentials (`admin` / `admin`) to access the system.
+    - **Login**: Use valid credentials to access the system.
     - **Upload Data**: Import supported file formats (`.txt`, `.csv`, `.xlsx`, `.json`, `.db`).
     - **Query Execution**: Enter natural language queries to receive AI-generated **SELECT** SQL statements.
     """)
