@@ -1,4 +1,3 @@
-# #SqlProj/Pages/Login.py
 #SqlProj/Pages/Login.py
 
 import sys
@@ -161,71 +160,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# import sys
-# import streamlit as st
-# from pathlib import Path
-
-# current_dir = Path(__file__).resolve()
-# root_directory = current_dir.parent.parent.parent
-# if str(root_directory) not in sys.path:
-#     sys.path.insert(0, str(root_directory))
-
-# from SqlProj.config import CUSTOM_CSS
-# from SqlProj.Pages import SessionState
-
-
-# def main():
-#     st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
-#     st.markdown('<h1 class="header">Login</h1>', unsafe_allow_html=True)
-
-#     SessionState.initialize_session_state()
-
-#     def login_section():
-#         st.subheader("🔒 User Authentication")
-#         user = st.text_input("Username")
-#         password = st.text_input("Password", type="password")
-#         if st.button("Log In"):
-#             if user == "admin" and password == "admin":
-#                 st.session_state.authenticated = True
-#                 st.session_state.current_page = "Main"  # Switch to Main page
-#                 st.success("✅ Successfully logged in! Redirecting to Main page...")
-#                 st.rerun()
-#             else:
-#                 st.session_state.authenticated = False
-#                 st.error("❌ Invalid credentials")
-
-#     if not st.session_state.get("authenticated", False):
-#         login_section()
-#     else:
-#         st.success("✅ You are already logged in. Proceed to the Main page.")
-
-#     st.markdown(
-#         """
-#         <div class="footer">
-#             <p>Made with ❤️ by Christina © 2025</p>
-#         </div>
-#         """,
-#         unsafe_allow_html=True
-#     )
