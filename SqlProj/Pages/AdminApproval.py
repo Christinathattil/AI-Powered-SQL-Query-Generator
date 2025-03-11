@@ -56,7 +56,7 @@ def main():
             st.markdown(f"**Name:** {full_name}  \n**Email:** {email}  \n**Purpose:** {purpose}  \n**Role:** {role}  \n**Registered On:** {reg_date}")
             col1, col2 = st.columns(2)
             with col1:
-                if st.button(f"Approve {req_id}", key=f"approve_{req_id}"):
+                if st.button(f"Approve", key=f"approve_{req_id}"):
                     c.execute("UPDATE users SET status = 'approved' WHERE id = ?", (req_id,))
                     conn.commit()
                     st.success(f"Approved registration for {full_name}")
@@ -66,7 +66,7 @@ def main():
                     send_email(email, subject, body)
                     st.rerun()
             with col2:
-                if st.button(f"Reject {req_id}", key=f"reject_{req_id}"):
+                if st.button(f"Reject", key=f"reject_{req_id}"):
                     c.execute("UPDATE users SET status = 'rejected' WHERE id = ?", (req_id,))
                     conn.commit()
                     st.error(f"Rejected registration for {full_name}")
