@@ -8,6 +8,8 @@ import hashlib
 import os
 import smtplib
 from email.message import EmailMessage
+import re
+
 
 current_dir = Path(__file__).resolve()
 root_directory = current_dir.parent.parent.parent
@@ -70,6 +72,26 @@ def send_email(recipient: str, subject: str, body: str):
     except Exception as e:
         st.error(f"Failed to send email: {e}")
 
+
+# Validate username (full name in this case)
+def is_valid_name(name):
+    return len(name) >= 3 and name.replace(" ", "").isalpha()
+
+# Validate email format
+def is_valid_email(email):
+    pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+    return bool(re.match(pattern, email))
+
+# Validate password security
+def is_valid_password(password):
+    pattern = r"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+    return bool(re.match(pattern, password))
+
+
+
+
+
+
 def main():
     st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
     st.markdown('<h1 class="header">Login / Registration</h1>', unsafe_allow_html=True)
@@ -127,6 +149,20 @@ def main():
         if st.button("Register"):
             if not full_name or not reg_email or not reg_password:
                 st.error("Please fill in all required fields.")
+
+            # Validate full name
+            elif not is_valid_name(full_name):
+                st.error("Full Name must be at least 3 characters long and contain only letters.")
+
+            # Validate email format
+            elif not is_valid_email(reg_email):
+                st.error("Invalid email format! Please enter a valid email address.")
+
+            # Validate password strength
+            elif not is_valid_password(reg_password):
+                st.error("Password must be at least 8 characters, include an uppercase letter, a number, and a special character.")
+
+
             else:
                 conn = sqlite3.connect("users.db")
                 c = conn.cursor()
@@ -137,7 +173,7 @@ def main():
                     st.success("Registration submitted! Awaiting admin approval.")
                     
                     # Send email to admin
-                    admin_email = "dwgwu@gmail.com"
+                    admin_email = "christina@gmail.com"
                     subject = "New User Registration Request"
                     body = (f"New registration details:\n\nFull Name: {full_name}\nEmail: {reg_email}\n"
                             f"Purpose: {purpose}\nRole: {role}\n\nPlease review and approve the registration.")
