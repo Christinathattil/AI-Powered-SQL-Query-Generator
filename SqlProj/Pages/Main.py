@@ -21,6 +21,8 @@ from openpyxl import load_workbook
 import sqlparse
 from sqlparse.sql import Identifier, IdentifierList
 from sqlparse.tokens import Keyword
+from google_drive_utils import upload_file
+
 
 
 # Determine project root and update sys.path
@@ -42,7 +44,11 @@ from SqlProj.sql import get_table_info
 # --------------------- Persistent Query History Helpers --------------------- #
 def init_query_history_db():
     """Initialize the query history database."""
-    conn = sqlite3.connect("query_history.db")
+    # conn = sqlite3.connect("query_history.db")
+
+    local_query_history_db = os.path.join("data", "query_history.db")
+    conn = sqlite3.connect(local_query_history_db)
+
     c = conn.cursor()
     c.execute("""
         CREATE TABLE IF NOT EXISTS query_history (
@@ -56,20 +62,33 @@ def init_query_history_db():
     conn.commit()
     conn.close()
 
+
 def store_query_history(user_email, question, sql_query):
     """Store a query history entry in the persistent database."""
-    conn = sqlite3.connect("query_history.db")
+    # conn = sqlite3.connect("query_history.db")
+
+    local_query_history_db = os.path.join("data", "query_history.db")
+    conn = sqlite3.connect(local_query_history_db)
+
     c = conn.cursor()
     c.execute("""
         INSERT INTO query_history (user_email, question, sql_query)
         VALUES (?, ?, ?)
     """, (user_email, question, sql_query))
     conn.commit()
+    
+    QUERY_HISTORY_DB_FILE_ID = st.secrets.get("QUERY_HISTORY_DB_FILE_ID")
+    upload_file(QUERY_HISTORY_DB_FILE_ID, local_query_history_db)
+    
     conn.close()
 
 def get_query_history(user_email):
     """Retrieve the last 10 query history entries for a given user."""
-    conn = sqlite3.connect("query_history.db")
+    # conn = sqlite3.connect("query_history.db")
+
+    local_query_history_db = os.path.join("data", "query_history.db")
+    conn = sqlite3.connect(local_query_history_db)
+
     c = conn.cursor()
     c.execute("""
         SELECT id, question, sql_query, timestamp FROM query_history
