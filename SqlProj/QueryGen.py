@@ -3,6 +3,17 @@ import streamlit as st
 from Pages import SessionState, Home, Login, Main, Documentation, AdminApproval
 import os
 
+
+st.set_page_config(
+    page_title="SQL Query Generator & Executor",
+    page_icon="💻",
+    layout="wide",
+    initial_sidebar_state="collapsed"  # Collapses the sidebar by default
+)
+
+# Force single-page mode by preventing Streamlit from auto-detecting other pages
+os.environ["STREAMLIT_SINGLE_PAGE_MODE"] = "true"
+
 # Create a local directory to hold the databases
 os.makedirs("data", exist_ok=True)
 # Get file IDs from Streamlit secrets (set these in your secrets)
@@ -18,15 +29,6 @@ from google_drive_utils import download_file
 download_file(USERS_DB_FILE_ID, local_users_db)
 download_file(QUERY_HISTORY_DB_FILE_ID, local_query_history_db)
 
-# Force single-page mode by preventing Streamlit from auto-detecting other pages
-os.environ["STREAMLIT_SINGLE_PAGE_MODE"] = "true"
-
-st.set_page_config(
-    page_title="SQL Query Generator & Executor",
-    page_icon="💻",
-    layout="wide",
-    initial_sidebar_state="collapsed"  # Collapses the sidebar by default
-)
 
 # Initialize session state
 SessionState.initialize_session_state()
