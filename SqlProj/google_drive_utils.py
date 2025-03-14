@@ -1,6 +1,7 @@
 # google_drive_utils.py
 import io
 import os
+import json
 import streamlit as st
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
@@ -9,8 +10,8 @@ from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 
 def get_drive_service():
-    # Load service account info from Streamlit Secrets
-    service_account_info = st.secrets["GOOGLE_SERVICE_ACCOUNT"]
+    # Parse the service account info from the secrets (convert string to dict)
+    service_account_info = json.loads(st.secrets["GOOGLE_SERVICE_ACCOUNT"])
     credentials = service_account.Credentials.from_service_account_info(service_account_info, scopes=SCOPES)
     drive_service = build('drive', 'v3', credentials=credentials)
     return drive_service
