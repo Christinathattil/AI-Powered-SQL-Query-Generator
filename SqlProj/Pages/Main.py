@@ -1,3 +1,4 @@
+
 #SqlProj/Pages/Main.py
 import sys
 import streamlit as st
@@ -43,6 +44,10 @@ from SqlProj.sql import get_table_info
 
 # --------------------- Persistent Query History Helpers --------------------- #
 def init_query_history_db():
+
+    data_dir = os.path.join(os.getcwd(), "data")
+    os.makedirs(data_dir, exist_ok=True)
+    
     """Initialize the query history database."""
     # conn = sqlite3.connect("query_history.db")
 
