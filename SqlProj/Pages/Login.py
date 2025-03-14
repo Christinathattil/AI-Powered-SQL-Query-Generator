@@ -22,6 +22,11 @@ from SqlProj.Pages import SessionState
 
 # Initialize Users Database
 def init_users_db():
+
+    # Ensure the "data" directory exists
+    data_dir = os.path.join(os.getcwd(), "data")
+    os.makedirs(data_dir, exist_ok=True)
+    
     # conn = sqlite3.connect("users.db")
     
     # Define the local path (ensure this matches what you used in QueryGen.py)
