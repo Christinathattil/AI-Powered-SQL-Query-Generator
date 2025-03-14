@@ -6,7 +6,7 @@ from email.message import EmailMessage
 from SqlProj.config import CUSTOM_CSS
 from SqlProj.Pages import SessionState
 
-# Helper function to send email notification
+# Helper function to send email notification (unchanged)
 def send_email(recipient: str, subject: str, body: str):
     smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
     smtp_port = int(os.getenv("SMTP_PORT", "465"))
@@ -30,6 +30,25 @@ def send_email(recipient: str, subject: str, body: str):
     except Exception as e:
         st.error(f"Failed to send email: {e}")
 
+# Helper to ensure the "users" table exists in our local database.
+def ensure_users_table(db_path):
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        full_name TEXT NOT NULL,
+        email TEXT NOT NULL UNIQUE,
+        password_hash TEXT NOT NULL,
+        purpose TEXT,
+        role TEXT,
+        status TEXT NOT NULL,
+        registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
+    conn.commit()
+    conn.close()
+
 def main():
     st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
     st.markdown('<h1 class="header">Admin Approval Dashboard</h1>', unsafe_allow_html=True)
@@ -43,10 +62,24 @@ def main():
     
     st.subheader("Pending Registration Requests")
     
-    conn = sqlite3.connect("users.db")
+    # Ensure the "data" directory exists
+    os.makedirs("data", exist_ok=True)
+    # Define the path for the local users database
+    local_users_db = os.path.join("data", "users.db")
+    
+    # Ensure the users table exists (creates it if missing)
+    ensure_users_table(local_users_db)
+    
+    conn = sqlite3.connect(local_users_db)
     c = conn.cursor()
-    c.execute("SELECT id, full_name, email, purpose, role, registration_date FROM users WHERE status = 'pending'")
-    pending_requests = c.fetchall()
+    
+    try:
+        c.execute("SELECT id, full_name, email, purpose, role, registration_date FROM users WHERE status = 'pending'")
+        pending_requests = c.fetchall()
+    except sqlite3.OperationalError as e:
+        st.error(f"Database error: {e}")
+        conn.close()
+        return
     
     if not pending_requests:
         st.info("No pending registration requests.")
@@ -56,7 +89,7 @@ def main():
             st.markdown(f"**Name:** {full_name}  \n**Email:** {email}  \n**Purpose:** {purpose}  \n**Role:** {role}  \n**Registered On:** {reg_date}")
             col1, col2 = st.columns(2)
             with col1:
-                if st.button(f"Approve", key=f"approve_{req_id}"):
+                if st.button("Approve", key=f"approve_{req_id}"):
                     c.execute("UPDATE users SET status = 'approved' WHERE id = ?", (req_id,))
                     conn.commit()
                     st.success(f"Approved registration for {full_name}")
@@ -64,9 +97,9 @@ def main():
                     subject = "Registration Approved"
                     body = f"Hello {full_name},\n\nYour registration has been approved. You can now log in to the system."
                     send_email(email, subject, body)
-                    st.rerun()
+                    st.experimental_rerun()
             with col2:
-                if st.button(f"Reject", key=f"reject_{req_id}"):
+                if st.button("Reject", key=f"reject_{req_id}"):
                     c.execute("UPDATE users SET status = 'rejected' WHERE id = ?", (req_id,))
                     conn.commit()
                     st.error(f"Rejected registration for {full_name}")
@@ -74,7 +107,7 @@ def main():
                     subject = "Registration Rejected"
                     body = f"Hello {full_name},\n\nYour registration request has been rejected. Please contact admin for further details."
                     send_email(email, subject, body)
-                    st.rerun()
+                    st.experimental_rerun()
             st.markdown("---")
     conn.close()
     
