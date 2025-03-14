@@ -2,7 +2,8 @@
 import streamlit as st
 from Pages import SessionState, Home, Login, Main, Documentation, AdminApproval
 import os
-
+import imageio_ffmpeg
+from pydub import AudioSegment
 
 st.set_page_config(
     page_title="SQL Query Generator & Executor",
@@ -23,6 +24,9 @@ QUERY_HISTORY_DB_FILE_ID = st.secrets.get("QUERY_HISTORY_DB_FILE_ID")
 # Define local paths
 local_users_db = os.path.join("data", "users.db")
 local_query_history_db = os.path.join("data", "query_history.db")
+
+# Set ffmpeg path for pydub
+AudioSegment.converter = imageio_ffmpeg.get_ffmpeg_exe()
 
 # Download the files using our helper module
 from google_drive_utils import download_file
